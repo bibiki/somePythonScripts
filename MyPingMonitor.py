@@ -3,6 +3,7 @@ import os
 import subprocess
 import time
 import smtplib
+import pyping
 from email.mime.text import MIMEText
 
 
@@ -43,12 +44,8 @@ class PingMonitor:
 		print("SENDING SMS")
 		
 	def is_there_ping(self, host):
-		print("is_there_ping() invocation")
-		sp = subprocess.Popen('ping ' + self.host_to_ping, stdout=subprocess.PIPE)
-		for line in sp.stdout:
-			if 'unreachable' in str(line):#too fragile
-				return False
-		return True
+		response = pyping.ping(host)
+		return response.ret_code == 0
 
 	def reset(self):
 		self.notification_sent = False
